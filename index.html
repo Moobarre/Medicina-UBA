@@ -32,12 +32,10 @@
       background-color: #C66F80;
       color: white;
       margin: 5px 0;
-      cursor: pointer;
       position: relative;
     }
     .subject.locked {
       background-color: #ccc;
-      cursor: not-allowed;
     }
     .tooltip {
       position: absolute;
@@ -54,6 +52,14 @@
     .subject.locked:hover .tooltip {
       display: block;
     }
+    .checkboxes {
+      margin-top: 5px;
+    }
+    .checkboxes label {
+      font-size: 12px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Nunito&family=Righteous&display=swap" rel="stylesheet">
 </head>
@@ -63,12 +69,12 @@
   <script>
     const data = {
       "CBC": [
-        "Introducción al Pensamiento Científico",
-        "Introducción al Conocimiento de la Sociedad y Estado",
-        "Química",
-        "Fisica e Introducción a la biofísica",
-        "Biología e Introducción a la Biología Celular",
-        "Matemática"
+        { name: "Introducción al Pensamiento Científico", req: [] },
+        { name: "Introducción al Conocimiento de la Sociedad y Estado", req: [] },
+        { name: "Química", req: [] },
+        { name: "Fisica e Introducción a la biofísica", req: [] },
+        { name: "Biología e Introducción a la Biología Celular", req: [] },
+        { name: "Matemática", req: [] }
       ],
       "Ciclo Biomédico - Año 2": [
         { name: "Anatomía", req: ["CBC"] },
@@ -130,22 +136,74 @@
     function createSubject(name, reqs = []) {
       const div = document.createElement('div');
       div.className = 'subject';
-      div.textContent = name;
+      const label = document.createElement('div');
+      label.textContent = name;
+      div.appendChild(label);
+
       const tooltip = document.createElement('div');
       tooltip.className = 'tooltip';
-      if (reqs.length && !reqs.every(isApproved)) {
+
+      const isLocked = reqs.length > 0 && !reqs.every(isApproved);
+
+      if (isLocked) {
         div.classList.add('locked');
         tooltip.textContent = `Requiere: ${reqs.join(', ')}`;
         div.appendChild(tooltip);
-        return div;
       }
-      div.onclick = () => {
-        const status = prompt(`Estado de "${name}": (aprobada / regularizada / vacío para eliminar)`, state[name] || "");
-        if (!status || status === '') delete state[name];
-        else if (["aprobada", "regularizada"].includes(status)) state[name] = status;
-        saveState();
-        location.reload();
-      };
+
+      if (!isLocked) {
+        const checkboxes = document.createElement('div');
+        checkboxes.className = 'checkboxes';
+
+        const aprobada = document.createElement('input');
+        aprobada.type = 'radio';
+        aprobada.name = name;
+        aprobada.checked = state[name] === 'aprobada';
+        aprobada.onchange = () => {
+          state[name] = 'aprobada';
+          saveState();
+          location.reload();
+        };
+
+        const regular = document.createElement('input');
+        regular.type = 'radio';
+        regular.name = name;
+        regular.checked = state[name] === 'regularizada';
+        regular.onchange = () => {
+          state[name] = 'regularizada';
+          saveState();
+          location.reload();
+        };
+
+        const clear = document.createElement('input');
+        clear.type = 'radio';
+        clear.name = name;
+        clear.checked = !state[name];
+        clear.onchange = () => {
+          delete state[name];
+          saveState();
+          location.reload();
+        };
+
+        const labelA = document.createElement('label');
+        labelA.appendChild(aprobada);
+        labelA.appendChild(document.createTextNode(' Aprobada'));
+
+        const labelR = document.createElement('label');
+        labelR.appendChild(regular);
+        labelR.appendChild(document.createTextNode(' Regularizada'));
+
+        const labelC = document.createElement('label');
+        labelC.appendChild(clear);
+        labelC.appendChild(document.createTextNode(' - '));
+
+        checkboxes.appendChild(labelC);
+        checkboxes.appendChild(labelA);
+        checkboxes.appendChild(labelR);
+
+        div.appendChild(checkboxes);
+      }
+
       if (state[name]) div.style.backgroundColor = state[name] === 'aprobada' ? '#7A8450' : '#C66F80';
       return div;
     }
@@ -158,12 +216,10 @@
       title.textContent = year;
       col.appendChild(title);
       subjects.forEach(sub => {
-        if (typeof sub === 'string') col.appendChild(createSubject(sub));
-        else col.appendChild(createSubject(sub.name, sub.req));
+        col.appendChild(createSubject(sub.name, sub.req));
       });
       grid.appendChild(col);
     }
   </script>
 </body>
 </html>
-
