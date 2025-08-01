@@ -7,48 +7,36 @@
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background: #b898a3;
+      background: #f9f9f9;
       margin: 0;
       padding: 20px;
     }
-    h1 {
+    h1, h2 {
       font-family: 'Righteous', cursive;
-      color: #4a6644;
-      text-align: center;
-      margin-bottom: 30px;
+      color: #7A8450;
     }
-    .malla-container {
-      display: flex;
-      overflow-x: auto;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
-      padding-bottom: 30px;
     }
-    .ciclo {
-      flex: 0 0 auto;
-      width: 250px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px;
-    }
-    .ciclo h2 {
-      font-family: 'Righteous', cursive;
-      font-size: 18px;
-      color: #7a8450;
-      text-align: center;
-      margin-bottom: 15px;
+    .year {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .subject {
-      background-color: #C66F80;
-      color: white;
       padding: 8px;
       border-radius: 5px;
-      margin-bottom: 8px;
-      font-size: 14px;
+      background-color: #C66F80;
+      color: white;
+      margin: 5px 0;
       position: relative;
     }
     .subject.locked {
-      background-color: #ABAE86;
+      background-color: #ccc;
     }
     .tooltip {
       position: absolute;
@@ -58,7 +46,7 @@
       color: #fff;
       padding: 4px 8px;
       border-radius: 4px;
-      font-size: 11px;
+      font-size: 12px;
       white-space: nowrap;
       display: none;
     }
@@ -69,8 +57,8 @@
       margin-top: 5px;
     }
     .checkboxes label {
-      font-size: 11px;
-      margin-right: 8px;
+      font-size: 12px;
+      margin-right: 10px;
       cursor: pointer;
     }
   </style>
@@ -78,8 +66,7 @@
 </head>
 <body>
   <h1>Malla Curricular - Medicina</h1>
-  <div class="malla-container" id="malla"></div>
-
+  <div id="grid" class="grid"></div>
   <script>
     const data = {
       "Ciclo Común": [
@@ -90,7 +77,7 @@
         { name: "Biología e Introducción a la Biología Celular", req: [] },
         { name: "Matemática", req: [] }
       ],
-      "Año 2 - Biomédico": [
+      "Ciclo Biomédico - Año 2": [
         { name: "Anatomía", req: [
           "Introducción al Pensamiento Científico",
           "Introducción al Conocimiento de la Sociedad y Estado",
@@ -98,83 +85,41 @@
           "Fisica e Introducción a la biofísica",
           "Biología e Introducción a la Biología Celular",
           "Matemática"] },
-        { name: "Histología", req: [
-          "Introducción al Pensamiento Científico",
-          "Introducción al Conocimiento de la Sociedad y Estado",
-          "Química",
-          "Fisica e Introducción a la biofísica",
-          "Biología e Introducción a la Biología Celular",
-          "Matemática"] },
-        { name: "Embriologia", req: [
-          "Introducción al Pensamiento Científico",
-          "Introducción al Conocimiento de la Sociedad y Estado",
-          "Química",
-          "Fisica e Introducción a la biofísica",
-          "Biología e Introducción a la Biología Celular",
-          "Matemática"] },
-        { name: "Biología Molecular y Genética", req: [
-          "Introducción al Pensamiento Científico",
-          "Introducción al Conocimiento de la Sociedad y Estado",
-          "Química",
-          "Fisica e Introducción a la biofísica",
-          "Biología e Introducción a la Biología Celular",
-          "Matemática"] },
-        { name: "Salud Mental", req: [
-          "Introducción al Pensamiento Científico",
-          "Introducción al Conocimiento de la Sociedad y Estado",
-          "Química",
-          "Fisica e Introducción a la biofísica",
-          "Biología e Introducción a la Biología Celular",
-          "Matemática"] },
-        { name: "Salud Pública", req: [
-          "Introducción al Pensamiento Científico",
-          "Introducción al Conocimiento de la Sociedad y Estado",
-          "Química",
-          "Fisica e Introducción a la biofísica",
-          "Biología e Introducción a la Biología Celular",
-          "Matemática"] },
-        { name: "Bioética", req: [
-          "Introducción al Pensamiento Científico",
-          "Introducción al Conocimiento de la Sociedad y Estado",
-          "Química",
-          "Fisica e Introducción a la biofísica",
-          "Biología e Introducción a la Biología Celular",
-          "Matemática"] },
-        { name: "Inglés para Ciencias de la Salud", req: [
-          "Introducción al Pensamiento Científico",
-          "Introducción al Conocimiento de la Sociedad y Estado",
-          "Química",
-          "Fisica e Introducción a la biofísica",
-          "Biología e Introducción a la Biología Celular",
-          "Matemática"] },
+        { name: "Histología", req: ["Anatomía"] },
+        { name: "Embriología", req: ["Anatomía"] },
+        { name: "Biología Molecular y Genética", req: ["Anatomía"] },
+        { name: "Salud Mental", req: ["Anatomía"] },
+        { name: "Salud Pública", req: ["Anatomía"] },
+        { name: "Bioética", req: ["Anatomía"] },
+        { name: "Curso de Inglés para Ciencias de la Salud", req: ["Anatomía"] }
       ],
-      "Año 3 - Biomédico": [
-        { name: "Fisiología y Biofísica", req: ["Anatomía", "Histología"] },
-        { name: "Bioquímica", req: ["Anatomía", "Histología"] },
-        { name: "Inmunología Humana", req: ["Anatomía", "Histología"] },
-        { name: "Microbiología y Parasitología", req: ["Inmunología Humana", "Bioquímica"] }
+      "Ciclo Biomédico - Año 3": [
+        { name: "Fisiología y Biofísica", req: ["Anatomía", "Histología", "Embriología", "Biología Molecular y Genética"] },
+        { name: "Bioquímica", req: ["Anatomía", "Histología", "Embriología", "Biología Molecular y Genética"] },
+        { name: "Inmunología humana", req: ["Anatomía", "Histología", "Embriología", "Biología Molecular y Genética"] },
+        { name: "Microbiología y Parasitología", req: ["Inmunología humana", "Bioquímica"] }
       ],
-      "Medicina Clínica": [
-        { name: "Medicina I", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología Humana"] },
-        { name: "Patología", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología Humana"] },
-        { name: "Farmacología I", req: ["Medicina I", "Patología"] },
+      "Ciclo Clínico - Medicina": [
+        { name: "Medicina I", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
+        { name: "Patología", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
+        { name: "Farmacología I", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
         { name: "Medicina II", req: ["Medicina I", "Patología"] },
-        { name: "Diagnóstico por Imágenes", req: ["Medicina I", "Patología"] },
+        { name: "Diagnóstico por imágenes", req: ["Medicina I", "Patología"] },
         { name: "Nutrición", req: ["Medicina I", "Patología"] },
         { name: "Dermatología", req: ["Medicina I", "Patología"] },
         { name: "Infectología", req: ["Medicina I", "Patología"] },
         { name: "Neumología", req: ["Medicina I", "Patología"] },
-        { name: "Neurología", req: ["Medicina I", "Patologia"] }
+        { name: "Neurología", req: ["Medicina I", "Patología"] }
       ],
-      "Cirugía y Especialidades": [
-        { name: "Cirugía General", req: ["Medicina I", "Patología"] },
+      "Ciclo Clínico - Cirugía": [
+        { name: "Cirugía general", req: ["Medicina I", "Patología"] },
         { name: "Urología", req: ["Medicina I", "Patología"] },
         { name: "Traumatología y Ortopedia", req: ["Medicina I", "Patología"] },
         { name: "Oftalmología", req: ["Medicina I", "Patología"] },
         { name: "Otorrinolaringología", req: ["Medicina I", "Patología"] },
         { name: "Neurocirugía", req: ["Medicina I", "Patología"] }
       ],
-      "Tocoginecología y Pediatría": [
+      "Ciclo Clínico - Tocoginecología y Otros": [
         { name: "Obstetricia", req: ["Medicina I", "Patología"] },
         { name: "Ginecología", req: ["Medicina I", "Patología"] },
         { name: "Pediatría", req: ["Medicina I", "Patología"] },
@@ -191,8 +136,8 @@
       localStorage.setItem('mallaMedicina', JSON.stringify(state));
     }
 
-    function isApproved(name) {
-      return state[name] === 'aprobada' || state[name] === 'regularizada';
+    function isApproved(subject) {
+      return state[subject] === 'aprobada' || state[subject] === 'regularizada';
     }
 
     function createSubject(name, reqs = []) {
@@ -205,23 +150,24 @@
       const tooltip = document.createElement('div');
       tooltip.className = 'tooltip';
 
-      const locked = reqs.length > 0 && !reqs.every(isApproved);
-      if (locked) {
+      const isLocked = reqs.length > 0 && !reqs.every(isApproved);
+
+      if (isLocked) {
         div.classList.add('locked');
         tooltip.textContent = `Requiere: ${reqs.join(', ')}`;
         div.appendChild(tooltip);
       }
 
-      if (!locked) {
+      if (!isLocked) {
         const checkboxes = document.createElement('div');
         checkboxes.className = 'checkboxes';
 
-        const clear = document.createElement('input');
-        clear.type = 'radio';
-        clear.name = name;
-        clear.checked = !state[name];
-        clear.onchange = () => {
-          delete state[name];
+        const aprobada = document.createElement('input');
+        aprobada.type = 'radio';
+        aprobada.name = name;
+        aprobada.checked = state[name] === 'aprobada';
+        aprobada.onchange = () => {
+          state[name] = 'aprobada';
           saveState();
           location.reload();
         };
@@ -236,257 +182,50 @@
           location.reload();
         };
 
-        const aprobada = document.createElement('input');
-        aprobada.type = 'radio';
-        aprobada.name = name;
-        aprobada.checked = state[name] === 'aprobada';
-        aprobada.onchange = () => {
-          state[name] = 'aprobada';
+        const clear = document.createElement('input');
+        clear.type = 'radio';
+        clear.name = name;
+        clear.checked = !state[name];
+        clear.onchange = () => {
+          delete state[name];
           saveState();
           location.reload();
         };
+
+        const labelA = document.createElement('label');
+        labelA.appendChild(aprobada);
+        labelA.appendChild(document.createTextNode(' Aprobada'));
+
+        const labelR = document.createElement('label');
+        labelR.appendChild(regular);
+        labelR.appendChild(document.createTextNode(' Regularizada'));
 
         const labelC = document.createElement('label');
         labelC.appendChild(clear);
-        labelC.append(" - ");
-
-        const labelR = document.createElement('label');
-        labelR.appendChild(regular);
-        labelR.append(" Regularizada");
-
-        const labelA = document.createElement('label');
-        labelA.appendChild(aprobada);
-        labelA.append(" Aprobada");
+        labelC.appendChild(document.createTextNode(' - '));
 
         checkboxes.appendChild(labelC);
-        checkboxes.appendChild(labelR);
         checkboxes.appendChild(labelA);
+        checkboxes.appendChild(labelR);
 
         div.appendChild(checkboxes);
       }
 
-      if (state[name]) {
-        div.style.backgroundColor = state[name] === 'aprobada' ? '#7A8450' : '#C66F80';
-      }
-
+      if (state[name]) div.style.backgroundColor = state[name] === 'aprobada' ? '#7A8450' : '#C66F80';
       return div;
     }
 
-    const container = document.getElementById('malla');
-    for (const [ciclo, materias] of Object.entries(data)) {
+    const grid = document.getElementById('grid');
+    for (const [year, subjects] of Object.entries(data)) {
       const col = document.createElement('div');
-      col.className = 'ciclo';
-      const h2 = document.createElement('h2');
-      h2.textContent = ciclo;
-      col.appendChild(h2);
-      materias.forEach(m => {
-        col.appendChild(createSubject(m.name, m.req));
+      col.className = 'year';
+      const title = document.createElement('h2');
+      title.textContent = year;
+      col.appendChild(title);
+      subjects.forEach(sub => {
+        col.appendChild(createSubject(sub.name, sub.req));
       });
-      container.appendChild(col);
-    }
-  </script>
-</body>
-</html>
-s">
-<head>
-  <meta charset="UTF-8">
-  <title>Malla Curricular Medicina</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
-
-    body {
-      font-family: 'Fredoka', sans-serif;
-      background: #d8eadd;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h1 {
-      font-family: 'Fredoka', sans-serif;
-      color: #436850;
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 32px;
-    }
-
-    .malla-container {
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding-bottom: 30px;
-    }
-
-    .ciclo {
-      flex: 0 0 auto;
-      width: 260px;
-      background: #fff0f5;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 18px;
-    }
-
-    .ciclo h2 {
-      font-size: 20px;
-      color: #2f4f4f;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    .subject {
-      background-color: #b5d9b6;
-      color: #333;
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      font-size: 14px;
-      position: relative;
-      transition: background-color 0.3s ease;
-    }
-
-    .subject.locked {
-      background-color: #f7c9d3;
-    }
-
-    .subject.aprobada {
-      background-color: #90c990 !important;
-    }
-
-    .subject.regularizada {
-      background-color: #f7a0b2 !important;
-    }
-
-    .tooltip {
-      position: absolute;
-      bottom: 100%;
-      left: 0;
-      background-color: #555;
-      color: #fff;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      white-space: nowrap;
-      display: none;
-    }
-
-    .subject.locked:hover .tooltip {
-      display: block;
-    }
-
-    .checkboxes {
-      margin-top: 5px;
-    }
-
-    .checkboxes label {
-      font-size: 11px;
-      margin-right: 8px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <h1>Malla Curricular - Medicina</h1>
-  <div class="malla-container" id="malla"></div>
-
-  <script>
-    const data = { /* ... MISMO CONTENIDO DE data DEL ARCHIVO ORIGINAL ... */ };
-
-    let state = JSON.parse(localStorage.getItem('mallaMedicina') || '{}');
-
-    function saveState() {
-      localStorage.setItem('mallaMedicina', JSON.stringify(state));
-    }
-
-    function isApproved(name) {
-      return state[name] === 'aprobada' || state[name] === 'regularizada';
-    }
-
-    function createSubject(name, reqs = []) {
-      const div = document.createElement('div');
-      div.className = 'subject';
-      const label = document.createElement('div');
-      label.textContent = name;
-      div.appendChild(label);
-
-      const tooltip = document.createElement('div');
-      tooltip.className = 'tooltip';
-
-      const locked = reqs.length > 0 && !reqs.every(isApproved);
-      if (locked) {
-        div.classList.add('locked');
-        tooltip.textContent = `Requiere: ${reqs.join(', ')}`;
-        div.appendChild(tooltip);
-      }
-
-      if (!locked) {
-        const checkboxes = document.createElement('div');
-        checkboxes.className = 'checkboxes';
-
-        const clear = document.createElement('input');
-        clear.type = 'radio';
-        clear.name = name;
-        clear.checked = !state[name];
-        clear.onchange = () => {
-          delete state[name];
-          saveState();
-          location.reload();
-        };
-
-        const regular = document.createElement('input');
-        regular.type = 'radio';
-        regular.name = name;
-        regular.checked = state[name] === 'regularizada';
-        regular.onchange = () => {
-          state[name] = 'regularizada';
-          saveState();
-          location.reload();
-        };
-
-        const aprobada = document.createElement('input');
-        aprobada.type = 'radio';
-        aprobada.name = name;
-        aprobada.checked = state[name] === 'aprobada';
-        aprobada.onchange = () => {
-          state[name] = 'aprobada';
-          saveState();
-          location.reload();
-        };
-
-        checkboxes.innerHTML = `<label></label> `;
-        checkboxes.appendChild(clear);
-        checkboxes.append(" - ");
-
-        const labelR = document.createElement('label');
-        labelR.appendChild(regular);
-        labelR.append(" Regularizada");
-
-        const labelA = document.createElement('label');
-        labelA.appendChild(aprobada);
-        labelA.append(" Aprobada");
-
-        checkboxes.appendChild(labelR);
-        checkboxes.appendChild(labelA);
-
-        div.appendChild(checkboxes);
-      }
-
-      if (state[name]) {
-        div.classList.add(state[name]);
-      }
-
-      return div;
-    }
-
-    const container = document.getElementById('malla');
-    for (const [ciclo, materias] of Object.entries(data)) {
-      const col = document.createElement('div');
-      col.className = 'ciclo';
-      const h2 = document.createElement('h2');
-      h2.textContent = ciclo;
-      col.appendChild(h2);
-      materias.forEach(m => {
-        col.appendChild(createSubject(m.name, m.req));
-      });
-      container.appendChild(col);
+      grid.appendChild(col);
     }
   </script>
 </body>
