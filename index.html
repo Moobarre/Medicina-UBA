@@ -6,41 +6,50 @@
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background: #f9f9f9;
+      background: #f4f4f4;
       margin: 0;
       padding: 20px;
     }
+
     h1, h2 {
       font-family: 'Righteous', cursive;
       color: #7A8450;
     }
-    grid {
+
+    .grid {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
       justify-content: flex-start;
     }
-.year {
-  flex: 0 0 280px; /* ancho de cada columna */
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 10px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+
+    .year {
+      flex: 0 0 280px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
     .subject {
       padding: 8px;
-      border-radius: 5px;
+      margin: 8px 0;
+      border-radius: 6px;
       background-color: #C66F80;
       color: white;
-      margin: 5px 0;
       position: relative;
+      font-size: 14px;
+      transition: 0.2s ease-in-out;
     }
-.subject.locked {
-  background-color: #e0e0e0;
-  color: #666;
-  font-style: italic;
-}
+
+    .subject.locked {
+      background-color: #d3d3d3;
+      color: #666;
+      font-style: italic;
+      cursor: not-allowed;
+    }
+
     .tooltip {
       position: absolute;
       bottom: 100%;
@@ -53,23 +62,64 @@
       white-space: nowrap;
       display: none;
     }
+
     .subject.locked:hover .tooltip {
       display: block;
     }
+
     .checkboxes {
       margin-top: 5px;
     }
+
     .checkboxes label {
       font-size: 12px;
       margin-right: 10px;
       cursor: pointer;
     }
+
+    .leyenda {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      font-size: 14px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .leyenda span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .leyenda .box {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .aprobada { background: #7A8450; }
+    .regularizada { background: #C66F80; }
+    .bloqueada { background: #d3d3d3; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Nunito&family=Righteous&display=swap" rel="stylesheet">
 </head>
 <body>
+
   <h1>Malla Curricular - Medicina</h1>
+
+  <div class="leyenda">
+    <span><span class="box aprobada"></span> Aprobada</span>
+    <span><span class="box regularizada"></span> Regularizada</span>
+    <span><span class="box bloqueada"></span> Bloqueada</span>
+  </div>
+
   <div id="grid" class="grid"></div>
+
   <script>
     const data = {
       "Ciclo Común": [
@@ -214,7 +264,10 @@
         div.appendChild(checkboxes);
       }
 
-      if (state[name]) div.style.backgroundColor = state[name] === 'aprobada' ? '#7A8450' : '#C66F80';
+      if (state[name]) {
+        div.style.backgroundColor = state[name] === 'aprobada' ? '#7A8450' : '#C66F80';
+      }
+
       return div;
     }
 
