@@ -1,82 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Malla Curricular Medicina</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f9f9fb;
-      margin: 0;
-      padding: 2rem;
-      color: #333;
+      font-family: 'Nunito', sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
     }
-    h1 {
+    h1, h2 {
+      font-family: 'Righteous', cursive;
+      color: #7A8450;
       text-align: center;
-      color: #2a6f97;
     }
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
     }
     .column {
-      background: #ffffff;
+      background-color: #fff;
       border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .column h2 {
-      font-size: 1.2rem;
-      border-bottom: 2px solid #bee1e6;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      width: 280px;
     }
     .subject {
-      background: #e6f2f8;
-      margin-bottom: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 6px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 8px;
       cursor: pointer;
-      position: relative;
+      transition: 0.2s;
     }
-    .subject.locked {
-      background: #f0f0f0;
-      color: #aaa;
+    .subject:hover {
+      background-color: #f9f9f9;
+    }
+    .approved {
+      background-color: #C66F80;
+      color: white;
+    }
+    .regular {
+      background-color: #7A8450;
+      color: white;
+    }
+    .disabled {
+      opacity: 0.4;
       cursor: not-allowed;
-    }
-    .subject.completed {
-      background: #b8e0d2;
-      text-decoration: line-through;
-    }
-    .subject:hover .tooltip {
-      visibility: visible;
-      opacity: 1;
-    }
-    .tooltip {
-      visibility: hidden;
-      opacity: 0;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      border-radius: 6px;
-      padding: 5px;
-      position: absolute;
-      z-index: 1;
-      bottom: 120%;
-      left: 50%;
-      transform: translateX(-50%);
-      transition: opacity 0.3s;
-      font-size: 0.8rem;
-      width: max-content;
-      max-width: 200px;
+      pointer-events: auto;
     }
   </style>
 </head>
 <body>
-  <h1>Malla Curricular de Medicina</h1>
-  <div class="grid" id="curriculum"></div>
+  <h1>Malla Curricular - Medicina</h1>
+  <div class="grid" id="malla"></div>
+
   <script>
     const data = {
       "AÑO 1: CBC": [
@@ -97,16 +78,16 @@
         { name: "Bioética", requires: ["CBC"] },
         { name: "Curso de Inglés para Ciencias de la Salud", requires: ["CBC"] }
       ],
-      "AÑO 3": [
+      "AÑO 3: CICLO BIOMÉDICO": [
         { name: "Fisiologia y Biofisica", requires: ["Anatomia", "Histología", "Embriologia", "Biología Molecular y Genética"] },
         { name: "Bioquímica", requires: ["Anatomia", "Histología", "Embriologia", "Biología Molecular y Genética"] },
         { name: "Inmunologia humana", requires: ["Anatomia", "Histología", "Embriologia", "Biología Molecular y Genética"] },
         { name: "Microbiologia y Parasitologia", requires: ["Inmunologia humana", "Bioquímica"] }
       ],
-      "MEDICINA (Ciclo Clínico)": [
-        { name: "Medicina I", requires: ["Fisiologia y Biofisica", "Bioquímica", "Inmunologia humana", "Microbiologia y Parasitologia"] },
-        { name: "Patología", requires: ["Fisiologia y Biofisica", "Bioquímica", "Inmunologia humana", "Microbiologia y Parasitologia"] },
-        { name: "Farmacología I", requires: ["Fisiologia y Biofisica", "Bioquímica", "Inmunologia humana", "Microbiologia y Parasitologia"] },
+      "CICLO CLÍNICO - MEDICINA": [
+        { name: "Medicina I", requires: ["AÑO 3: CICLO BIOMÉDICO"] },
+        { name: "Patología", requires: ["AÑO 3: CICLO BIOMÉDICO"] },
+        { name: "Farmacología I", requires: ["AÑO 3: CICLO BIOMÉDICO"] },
         { name: "Medicina II", requires: ["Medicina I", "Patología"] },
         { name: "Diagnóstico por imágenes", requires: ["Medicina I", "Patología"] },
         { name: "Nutrición", requires: ["Medicina I", "Patología"] },
@@ -115,7 +96,7 @@
         { name: "Neumología", requires: ["Medicina I", "Patología"] },
         { name: "Neurología", requires: ["Medicina I", "Patología"] }
       ],
-      "CIRUGÍA": [
+      "CICLO CLÍNICO - CIRUGÍA": [
         { name: "Cirugía general", requires: ["Medicina I", "Patología"] },
         { name: "Urología", requires: ["Medicina I", "Patología"] },
         { name: "Traumatología y Ortopedia", requires: ["Medicina I", "Patología"] },
@@ -123,7 +104,7 @@
         { name: "Otorrinolaringología", requires: ["Medicina I", "Patología"] },
         { name: "Neurocirugía", requires: ["Medicina I", "Patología"] }
       ],
-      "TOCOGINECOLOGIA": [
+      "CICLO CLÍNICO - TOCOGINECOLOGÍA": [
         { name: "Obstetricia", requires: ["Medicina I", "Patología"] },
         { name: "Ginecología", requires: ["Medicina I", "Patología"] },
         { name: "Pediatría", requires: ["Medicina I", "Patología"] },
@@ -134,60 +115,71 @@
       ]
     };
 
-    const completed = JSON.parse(localStorage.getItem("medicina_materias")) || [];
+    const state = JSON.parse(localStorage.getItem("malla")) || {};
 
-    const curriculum = document.getElementById("curriculum");
-
-    for (const [year, subjects] of Object.entries(data)) {
-      const column = document.createElement("div");
-      column.className = "column";
-      const title = document.createElement("h2");
-      title.textContent = year;
-      column.appendChild(title);
-
-      for (const subj of subjects) {
-        const name = typeof subj === 'string' ? subj : subj.name;
-        const requires = typeof subj === 'string' ? [] : subj.requires;
-
-        const div = document.createElement("div");
-        div.className = "subject";
-        div.textContent = name;
-
-        if (completed.includes(name)) div.classList.add("completed");
-
-        const unmet = requires.filter(r => !completed.includes(r) && r !== "CBC");
-        const isLocked = unmet.length > 0;
-
-        if (requires.includes("CBC") && !completed.filter(s => data["AÑO 1: CBC"].includes(s)).length === 6) {
-          unmet.push("Completar CBC");
-        }
-
-        if (isLocked) {
-          div.classList.add("locked");
-          const tooltip = document.createElement("div");
-          tooltip.className = "tooltip";
-          tooltip.textContent = `Requiere: ${unmet.join(", ")}`;
-          div.appendChild(tooltip);
-        }
-
-        div.addEventListener("click", () => {
-          if (div.classList.contains("locked")) return;
-          div.classList.toggle("completed");
-
-          if (completed.includes(name)) {
-            completed.splice(completed.indexOf(name), 1);
-          } else {
-            completed.push(name);
-          }
-          localStorage.setItem("medicina_materias", JSON.stringify(completed));
-          location.reload();
-        });
-
-        column.appendChild(div);
-      }
-
-      curriculum.appendChild(column);
+    function saveState() {
+      localStorage.setItem("malla", JSON.stringify(state));
     }
+
+    function isApproved(name) {
+      return state[name] === "aprobado";
+    }
+
+    function isRegular(name) {
+      return state[name] === "regular";
+    }
+
+    function render() {
+      const container = document.getElementById("malla");
+      container.innerHTML = "";
+
+      for (const [column, subjects] of Object.entries(data)) {
+        const col = document.createElement("div");
+        col.className = "column";
+
+        const title = document.createElement("h2");
+        title.innerText = column;
+        col.appendChild(title);
+
+        for (let subj of subjects) {
+          let name = typeof subj === "string" ? subj : subj.name;
+          let requirements = typeof subj === "string" ? [] : subj.requires;
+
+          const div = document.createElement("div");
+          div.className = "subject";
+          div.innerText = name;
+
+          if (isApproved(name)) div.classList.add("approved");
+          else if (isRegular(name)) div.classList.add("regular");
+
+          const met = requirements.every(r => isApproved(r) || (r.includes("CBC") && allCbcApproved()));
+
+          if (!met) {
+            div.classList.add("disabled");
+            div.title = "Requiere: " + requirements.join(", ");
+          } else {
+            div.addEventListener("click", () => {
+              if (!state[name]) state[name] = "regular";
+              else if (state[name] === "regular") state[name] = "aprobado";
+              else delete state[name];
+              saveState();
+              render();
+            });
+          }
+
+          col.appendChild(div);
+        }
+
+        container.appendChild(col);
+      }
+    }
+
+    function allCbcApproved() {
+      return data["AÑO 1: CBC"].every(m => isApproved(m));
+    }
+
+    render();
   </script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito&family=Righteous&display=swap" rel="stylesheet">
 </body>
 </html>
