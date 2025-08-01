@@ -6,36 +6,44 @@
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background: #CAB8BE;
+      background: #f3f3f3;
       margin: 0;
       padding: 20px;
     }
     h1 {
       font-family: 'Righteous', cursive;
-      color: #4A6644;
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 30px;
     }
-    h2 {
-      font-family: 'Righteous', cursive;
-      color: #7A8450;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    .malla-container {
+      display: flex;
+      overflow-x: auto;
       gap: 20px;
+      padding-bottom: 30px;
     }
-    .year {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 10px;
-      background-color: #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .ciclo {
+      flex: 0 0 auto;
+      width: 250px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+    }
+    .ciclo h2 {
+      font-family: 'Righteous', cursive;
+      font-size: 18px;
+      color: #34495e;
+      text-align: center;
+      margin-bottom: 15px;
     }
     .subject {
-      padding: 8px;
-      border-radius: 5px;
       background-color: #C66F80;
       color: white;
-      margin: 5px 0;
+      padding: 8px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      font-size: 14px;
       position: relative;
     }
     .subject.locked {
@@ -49,7 +57,7 @@
       color: #fff;
       padding: 4px 8px;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 11px;
       white-space: nowrap;
       display: none;
     }
@@ -60,8 +68,8 @@
       margin-top: 5px;
     }
     .checkboxes label {
-      font-size: 12px;
-      margin-right: 10px;
+      font-size: 11px;
+      margin-right: 8px;
       cursor: pointer;
     }
   </style>
@@ -69,7 +77,8 @@
 </head>
 <body>
   <h1>Malla Curricular - Medicina</h1>
-  <div id="grid" class="grid"></div>
+  <div class="malla-container" id="malla"></div>
+
   <script>
     const data = {
       "Ciclo Común": [
@@ -80,7 +89,7 @@
         { name: "Biología e Introducción a la Biología Celular", req: [] },
         { name: "Matemática", req: [] }
       ],
-      "Ciclo Biomédico - Año 2": [
+      "Año 2 - Biomédico": [
         { name: "Anatomía", req: [
           "Introducción al Pensamiento Científico",
           "Introducción al Conocimiento de la Sociedad y Estado",
@@ -88,7 +97,7 @@
           "Fisica e Introducción a la biofísica",
           "Biología e Introducción a la Biología Celular",
           "Matemática"] },
-        { name: "Histología", req: [          
+        { name: "Histología", req: [
           "Introducción al Pensamiento Científico",
           "Introducción al Conocimiento de la Sociedad y Estado",
           "Química",
@@ -102,7 +111,7 @@
           "Fisica e Introducción a la biofísica",
           "Biología e Introducción a la Biología Celular",
           "Matemática"] },
-        { name: "Biologia Molegular y Genetica", req: [
+        { name: "Biología Molecular y Genética", req: [
           "Introducción al Pensamiento Científico",
           "Introducción al Conocimiento de la Sociedad y Estado",
           "Química",
@@ -116,7 +125,7 @@
           "Fisica e Introducción a la biofísica",
           "Biología e Introducción a la Biología Celular",
           "Matemática"] },
-        { name: "Salud Publica", req: [
+        { name: "Salud Pública", req: [
           "Introducción al Pensamiento Científico",
           "Introducción al Conocimiento de la Sociedad y Estado",
           "Química",
@@ -130,7 +139,7 @@
           "Fisica e Introducción a la biofísica",
           "Biología e Introducción a la Biología Celular",
           "Matemática"] },
-        { name: "Curso de Inglés para Ciencias de la Salud", req: [
+        { name: "Inglés para Ciencias de la Salud", req: [
           "Introducción al Pensamiento Científico",
           "Introducción al Conocimiento de la Sociedad y Estado",
           "Química",
@@ -138,33 +147,33 @@
           "Biología e Introducción a la Biología Celular",
           "Matemática"] },
       ],
-      "Ciclo Biomédico - Año 3": [
+      "Año 3 - Biomédico": [
         { name: "Fisiología y Biofísica", req: ["Anatomía", "Histología"] },
         { name: "Bioquímica", req: ["Anatomía", "Histología"] },
-        { name: "Inmunología humana", req: ["Anatomía", "Histología"] },
-        { name: "Microbiología y Parasitología", req: ["Inmunología humana", "Bioquímica"] }
+        { name: "Inmunología Humana", req: ["Anatomía", "Histología"] },
+        { name: "Microbiología y Parasitología", req: ["Inmunología Humana", "Bioquímica"] }
       ],
-      "Ciclo Clínico - Medicina": [
-        { name: "Medicina I", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
-        { name: "Patología", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
-        { name: "Farmacología I", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
+      "Medicina Clínica": [
+        { name: "Medicina I", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología Humana"] },
+        { name: "Patología", req: ["Fisiología y Biofísica"] },
+        { name: "Farmacología I", req: ["Medicina I", "Patología"] },
         { name: "Medicina II", req: ["Medicina I", "Patología"] },
-        { name: "Diagnóstico por imágenes", req: ["Medicina I", "Patología"] },
+        { name: "Diagnóstico por Imágenes", req: ["Medicina I", "Patología"] },
         { name: "Nutrición", req: ["Medicina I", "Patología"] },
         { name: "Dermatología", req: ["Medicina I", "Patología"] },
         { name: "Infectología", req: ["Medicina I", "Patología"] },
         { name: "Neumología", req: ["Medicina I", "Patología"] },
-        { name: "Neurología", req: ["Medicina I", "Patología"] }
+        { name: "Neurología", req: ["Medicina I", "Patologia"] }
       ],
-      "Ciclo Clínico - Cirugía": [
-        { name: "Cirugía general", req: ["Medicina I", "Patología"] },
+      "Cirugía y Especialidades": [
+        { name: "Cirugía General", req: ["Medicina I", "Patología"] },
         { name: "Urología", req: ["Medicina I", "Patología"] },
         { name: "Traumatología y Ortopedia", req: ["Medicina I", "Patología"] },
         { name: "Oftalmología", req: ["Medicina I", "Patología"] },
         { name: "Otorrinolaringología", req: ["Medicina I", "Patología"] },
         { name: "Neurocirugía", req: ["Medicina I", "Patología"] }
       ],
-      "Ciclo Clínico - Tocoginecología y Otros": [
+      "Tocoginecología y Pediatría": [
         { name: "Obstetricia", req: ["Medicina I", "Patología"] },
         { name: "Ginecología", req: ["Medicina I", "Patología"] },
         { name: "Pediatría", req: ["Medicina I", "Patología"] },
@@ -181,8 +190,8 @@
       localStorage.setItem('mallaMedicina', JSON.stringify(state));
     }
 
-    function isApproved(subject) {
-      return state[subject] === 'aprobada' || state[subject] === 'regularizada';
+    function isApproved(name) {
+      return state[name] === 'aprobada' || state[name] === 'regularizada';
     }
 
     function createSubject(name, reqs = []) {
@@ -195,24 +204,23 @@
       const tooltip = document.createElement('div');
       tooltip.className = 'tooltip';
 
-      const isLocked = reqs.length > 0 && !reqs.every(isApproved);
-
-      if (isLocked) {
+      const locked = reqs.length > 0 && !reqs.every(isApproved);
+      if (locked) {
         div.classList.add('locked');
         tooltip.textContent = `Requiere: ${reqs.join(', ')}`;
         div.appendChild(tooltip);
       }
 
-      if (!isLocked) {
+      if (!locked) {
         const checkboxes = document.createElement('div');
         checkboxes.className = 'checkboxes';
 
-        const aprobada = document.createElement('input');
-        aprobada.type = 'radio';
-        aprobada.name = name;
-        aprobada.checked = state[name] === 'aprobada';
-        aprobada.onchange = () => {
-          state[name] = 'aprobada';
+        const clear = document.createElement('input');
+        clear.type = 'radio';
+        clear.name = name;
+        clear.checked = !state[name];
+        clear.onchange = () => {
+          delete state[name];
           saveState();
           location.reload();
         };
@@ -227,50 +235,53 @@
           location.reload();
         };
 
-        const clear = document.createElement('input');
-        clear.type = 'radio';
-        clear.name = name;
-        clear.checked = !state[name];
-        clear.onchange = () => {
-          delete state[name];
+        const aprobada = document.createElement('input');
+        aprobada.type = 'radio';
+        aprobada.name = name;
+        aprobada.checked = state[name] === 'aprobada';
+        aprobada.onchange = () => {
+          state[name] = 'aprobada';
           saveState();
           location.reload();
         };
 
-        const labelA = document.createElement('label');
-        labelA.appendChild(aprobada);
-        labelA.appendChild(document.createTextNode(' Aprobada'));
+        const labelC = document.createElement('label');
+        labelC.appendChild(clear);
+        labelC.append(" - ");
 
         const labelR = document.createElement('label');
         labelR.appendChild(regular);
-        labelR.appendChild(document.createTextNode(' Regularizada'));
+        labelR.append(" Regularizada");
 
-        const labelC = document.createElement('label');
-        labelC.appendChild(clear);
-        labelC.appendChild(document.createTextNode(' - '));
+        const labelA = document.createElement('label');
+        labelA.appendChild(aprobada);
+        labelA.append(" Aprobada");
 
         checkboxes.appendChild(labelC);
-        checkboxes.appendChild(labelA);
         checkboxes.appendChild(labelR);
+        checkboxes.appendChild(labelA);
 
         div.appendChild(checkboxes);
       }
 
-      if (state[name]) div.style.backgroundColor = state[name] === 'aprobada' ? '#7A8450' : '#C66F80';
+      if (state[name]) {
+        div.style.backgroundColor = state[name] === 'aprobada' ? '#7A8450' : '#C66F80';
+      }
+
       return div;
     }
 
-    const grid = document.getElementById('grid');
-    for (const [year, subjects] of Object.entries(data)) {
+    const container = document.getElementById('malla');
+    for (const [ciclo, materias] of Object.entries(data)) {
       const col = document.createElement('div');
-      col.className = 'year';
-      const title = document.createElement('h2');
-      title.textContent = year;
-      col.appendChild(title);
-      subjects.forEach(sub => {
-        col.appendChild(createSubject(sub.name, sub.req));
+      col.className = 'ciclo';
+      const h2 = document.createElement('h2');
+      h2.textContent = ciclo;
+      col.appendChild(h2);
+      materias.forEach(m => {
+        col.appendChild(createSubject(m.name, m.req));
       });
-      grid.appendChild(col);
+      container.appendChild(col);
     }
   </script>
 </body>
