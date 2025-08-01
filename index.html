@@ -2,184 +2,168 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Malla Curricular Medicina</title>
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background-color: #f4f4f4;
+      background: #f9f9f9;
+      margin: 0;
       padding: 20px;
     }
     h1, h2 {
       font-family: 'Righteous', cursive;
       color: #7A8450;
-      text-align: center;
     }
     .grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
-      justify-content: center;
     }
-    .column {
-      background-color: #fff;
+    .year {
+      border: 1px solid #ccc;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 15px;
-      width: 280px;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .subject {
-      padding: 10px;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .subject:hover {
-      background-color: #f9f9f9;
-    }
-    .approved {
+      padding: 8px;
+      border-radius: 5px;
       background-color: #C66F80;
       color: white;
+      margin: 5px 0;
+      cursor: pointer;
+      position: relative;
     }
-    .regular {
-      background-color: #7A8450;
-      color: white;
-    }
-    .disabled {
-      opacity: 0.4;
+    .subject.locked {
+      background-color: #ccc;
       cursor: not-allowed;
-      pointer-events: auto;
+    }
+    .tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      background-color: #333;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      display: none;
+    }
+    .subject.locked:hover .tooltip {
+      display: block;
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito&family=Righteous&display=swap" rel="stylesheet">
 </head>
 <body>
   <h1>Malla Curricular - Medicina</h1>
-  <div class="grid" id="malla"></div>
-
+  <div id="grid" class="grid"></div>
   <script>
     const data = {
-      "AÑO 1: CBC": [
+      "CBC": [
         "Introducción al Pensamiento Científico",
         "Introducción al Conocimiento de la Sociedad y Estado",
         "Química",
-        "Fisica e Introduccion a la biofisica",
-        "Biologia e Introduccion a la Biología Celular",
+        "Fisica e Introducción a la biofísica",
+        "Biología e Introducción a la Biología Celular",
         "Matemática"
       ],
-      "AÑO 2: CICLO BIOMÉDICO": [
-        { name: "Anatomia", requires: ["CBC"] },
-        { name: "Histología", requires: ["CBC"] },
-        { name: "Embriologia", requires: ["CBC"] },
-        { name: "Biología Molecular y Genética", requires: ["CBC"] },
-        { name: "Salud Mental", requires: ["CBC"] },
-        { name: "Salud Pública", requires: ["CBC"] },
-        { name: "Bioética", requires: ["CBC"] },
-        { name: "Curso de Inglés para Ciencias de la Salud", requires: ["CBC"] }
+      "Ciclo Biomédico - Año 2": [
+        { name: "Anatomía", req: ["CBC"] },
+        { name: "Histología", req: ["CBC"] },
+        { name: "Embriología", req: ["CBC"] },
+        { name: "Biología Molecular y Genética", req: ["CBC"] },
+        { name: "Salud Mental", req: ["CBC"] },
+        { name: "Salud Pública", req: ["CBC"] },
+        { name: "Bioética", req: ["CBC"] },
+        { name: "Curso de Inglés para Ciencias de la Salud", req: ["CBC"] }
       ],
-      "AÑO 3: CICLO BIOMÉDICO": [
-        { name: "Fisiologia y Biofisica", requires: ["Anatomia", "Histología", "Embriologia", "Biología Molecular y Genética"] },
-        { name: "Bioquímica", requires: ["Anatomia", "Histología", "Embriologia", "Biología Molecular y Genética"] },
-        { name: "Inmunologia humana", requires: ["Anatomia", "Histología", "Embriologia", "Biología Molecular y Genética"] },
-        { name: "Microbiologia y Parasitologia", requires: ["Inmunologia humana", "Bioquímica"] }
+      "Ciclo Biomédico - Año 3": [
+        { name: "Fisiología y Biofísica", req: ["Anatomía", "Histología", "Embriología", "Biología Molecular y Genética"] },
+        { name: "Bioquímica", req: ["Anatomía", "Histología", "Embriología", "Biología Molecular y Genética"] },
+        { name: "Inmunología humana", req: ["Anatomía", "Histología", "Embriología", "Biología Molecular y Genética"] },
+        { name: "Microbiología y Parasitología", req: ["Inmunología humana", "Bioquímica"] }
       ],
-      "CICLO CLÍNICO - MEDICINA": [
-        { name: "Medicina I", requires: ["AÑO 3: CICLO BIOMÉDICO"] },
-        { name: "Patología", requires: ["AÑO 3: CICLO BIOMÉDICO"] },
-        { name: "Farmacología I", requires: ["AÑO 3: CICLO BIOMÉDICO"] },
-        { name: "Medicina II", requires: ["Medicina I", "Patología"] },
-        { name: "Diagnóstico por imágenes", requires: ["Medicina I", "Patología"] },
-        { name: "Nutrición", requires: ["Medicina I", "Patología"] },
-        { name: "Dermatología", requires: ["Medicina I", "Patología"] },
-        { name: "Infectología", requires: ["Medicina I", "Patología"] },
-        { name: "Neumología", requires: ["Medicina I", "Patología"] },
-        { name: "Neurología", requires: ["Medicina I", "Patología"] }
+      "Ciclo Clínico - Medicina": [
+        { name: "Medicina I", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
+        { name: "Patología", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
+        { name: "Farmacología I", req: ["Fisiología y Biofísica", "Bioquímica", "Inmunología humana", "Microbiología y Parasitología"] },
+        { name: "Medicina II", req: ["Medicina I", "Patología"] },
+        { name: "Diagnóstico por imágenes", req: ["Medicina I", "Patología"] },
+        { name: "Nutrición", req: ["Medicina I", "Patología"] },
+        { name: "Dermatología", req: ["Medicina I", "Patología"] },
+        { name: "Infectología", req: ["Medicina I", "Patología"] },
+        { name: "Neumología", req: ["Medicina I", "Patología"] },
+        { name: "Neurología", req: ["Medicina I", "Patología"] }
       ],
-      "CICLO CLÍNICO - CIRUGÍA": [
-        { name: "Cirugía general", requires: ["Medicina I", "Patología"] },
-        { name: "Urología", requires: ["Medicina I", "Patología"] },
-        { name: "Traumatología y Ortopedia", requires: ["Medicina I", "Patología"] },
-        { name: "Oftalmología", requires: ["Medicina I", "Patología"] },
-        { name: "Otorrinolaringología", requires: ["Medicina I", "Patología"] },
-        { name: "Neurocirugía", requires: ["Medicina I", "Patología"] }
+      "Ciclo Clínico - Cirugía": [
+        { name: "Cirugía general", req: ["Medicina I", "Patología"] },
+        { name: "Urología", req: ["Medicina I", "Patología"] },
+        { name: "Traumatología y Ortopedia", req: ["Medicina I", "Patología"] },
+        { name: "Oftalmología", req: ["Medicina I", "Patología"] },
+        { name: "Otorrinolaringología", req: ["Medicina I", "Patología"] },
+        { name: "Neurocirugía", req: ["Medicina I", "Patología"] }
       ],
-      "CICLO CLÍNICO - TOCOGINECOLOGÍA": [
-        { name: "Obstetricia", requires: ["Medicina I", "Patología"] },
-        { name: "Ginecología", requires: ["Medicina I", "Patología"] },
-        { name: "Pediatría", requires: ["Medicina I", "Patología"] },
-        { name: "Farmacología II", requires: ["Medicina I", "Patología"] },
-        { name: "Psiquiatría", requires: ["Medicina I", "Patología"] },
-        { name: "Toxicología", requires: ["Medicina I", "Patología"] },
-        { name: "Medicina Legal y Deontología Médica", requires: ["Medicina I", "Patología"] }
+      "Ciclo Clínico - Tocoginecología y Otros": [
+        { name: "Obstetricia", req: ["Medicina I", "Patología"] },
+        { name: "Ginecología", req: ["Medicina I", "Patología"] },
+        { name: "Pediatría", req: ["Medicina I", "Patología"] },
+        { name: "Farmacología II", req: ["Medicina I", "Patología"] },
+        { name: "Psiquiatría", req: ["Medicina I", "Patología"] },
+        { name: "Toxicología", req: ["Medicina I", "Patología"] },
+        { name: "Medicina Legal y Deontología Médica", req: ["Medicina I", "Patología"] }
       ]
     };
 
-    const state = JSON.parse(localStorage.getItem("malla")) || {};
+    let state = JSON.parse(localStorage.getItem('mallaMedicina') || '{}');
 
     function saveState() {
-      localStorage.setItem("malla", JSON.stringify(state));
+      localStorage.setItem('mallaMedicina', JSON.stringify(state));
     }
 
-    function isApproved(name) {
-      return state[name] === "aprobado";
+    function isApproved(subject) {
+      return state[subject] === 'aprobada' || state[subject] === 'regularizada';
     }
 
-    function isRegular(name) {
-      return state[name] === "regular";
-    }
-
-    function render() {
-      const container = document.getElementById("malla");
-      container.innerHTML = "";
-
-      for (const [column, subjects] of Object.entries(data)) {
-        const col = document.createElement("div");
-        col.className = "column";
-
-        const title = document.createElement("h2");
-        title.innerText = column;
-        col.appendChild(title);
-
-        for (let subj of subjects) {
-          let name = typeof subj === "string" ? subj : subj.name;
-          let requirements = typeof subj === "string" ? [] : subj.requires;
-
-          const div = document.createElement("div");
-          div.className = "subject";
-          div.innerText = name;
-
-          if (isApproved(name)) div.classList.add("approved");
-          else if (isRegular(name)) div.classList.add("regular");
-
-          const met = requirements.every(r => isApproved(r) || (r.includes("CBC") && allCbcApproved()));
-
-          if (!met) {
-            div.classList.add("disabled");
-            div.title = "Requiere: " + requirements.join(", ");
-          } else {
-            div.addEventListener("click", () => {
-              if (!state[name]) state[name] = "regular";
-              else if (state[name] === "regular") state[name] = "aprobado";
-              else delete state[name];
-              saveState();
-              render();
-            });
-          }
-
-          col.appendChild(div);
-        }
-
-        container.appendChild(col);
+    function createSubject(name, reqs = []) {
+      const div = document.createElement('div');
+      div.className = 'subject';
+      div.textContent = name;
+      const tooltip = document.createElement('div');
+      tooltip.className = 'tooltip';
+      if (reqs.length && !reqs.every(isApproved)) {
+        div.classList.add('locked');
+        tooltip.textContent = `Requiere: ${reqs.join(', ')}`;
+        div.appendChild(tooltip);
+        return div;
       }
+      div.onclick = () => {
+        const status = prompt(`Estado de "${name}": (aprobada / regularizada / vacío para eliminar)`, state[name] || "");
+        if (!status || status === '') delete state[name];
+        else if (["aprobada", "regularizada"].includes(status)) state[name] = status;
+        saveState();
+        location.reload();
+      };
+      if (state[name]) div.style.backgroundColor = state[name] === 'aprobada' ? '#7A8450' : '#C66F80';
+      return div;
     }
 
-    function allCbcApproved() {
-      return data["AÑO 1: CBC"].every(m => isApproved(m));
+    const grid = document.getElementById('grid');
+    for (const [year, subjects] of Object.entries(data)) {
+      const col = document.createElement('div');
+      col.className = 'year';
+      const title = document.createElement('h2');
+      title.textContent = year;
+      col.appendChild(title);
+      subjects.forEach(sub => {
+        if (typeof sub === 'string') col.appendChild(createSubject(sub));
+        else col.appendChild(createSubject(sub.name, sub.req));
+      });
+      grid.appendChild(col);
     }
-
-    render();
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito&family=Righteous&display=swap" rel="stylesheet">
 </body>
 </html>
+
